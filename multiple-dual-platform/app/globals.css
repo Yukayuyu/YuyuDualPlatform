@@ -3,16 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-color-light: #f8f9fa;
+  --background-color-dark: #333;
+  --text-color-light: #000;
+  --text-color-dark: #fff;
+  --input-background-color-light: #fff;
+  --input-background-color-dark: #444;
+  --button-background-color: #007bff;
+  --button-background-color-hover: #0056b3;
+  --border-color-light: #ddd;
+  --border-color-dark: #555;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-color: var(--background-color-dark);
+    --text-color: var(--text-color-dark);
+    --input-background-color: var(--input-background-color-dark);
+    --border-color: var(--border-color-dark);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background-color: var(--background-color-light);
+    --text-color: var(--text-color-light);
+    --input-background-color: var(--input-background-color-light);
+    --border-color: var(--border-color-light);
   }
 }
 
@@ -31,3 +48,4 @@ body {
     text-wrap: balance;
   }
 }
+

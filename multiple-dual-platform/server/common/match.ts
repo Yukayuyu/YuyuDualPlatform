@@ -1,10 +1,12 @@
 "use server"
 
-import { Match, Player, Round } from "../types/event"
+import { Match, Player, Round } from "../lib/types/event"
+import { Sts_Players, Sts_Round_Status } from "../status/event_status"
 
 
 export function initPlayer(no :string | number, player_name : string) : Player{
     return {
+        id: '',
         _no: typeof no === 'number' ? no : parseInt(no, 10),
         player_name: player_name,
         wins: 0,
@@ -18,7 +20,7 @@ export function initPlayer(no :string | number, player_name : string) : Player{
 }
 
 export function generateRound(round_no : number, players : Player[]){
-    let round : Round = {round_no : round_no, matches : []}
+    let round : Round = {round_no : round_no, id : '', eventId : '', status: Sts_Round_Status.NOT_STARTED}
     let groupedPlayers : {[key : number] : Player[]} = {}
     
 
@@ -36,25 +38,25 @@ export function generateRound(round_no : number, players : Player[]){
             if(opponentIndex !== -1){
                 let player2 = availablePlayers.splice(opponentIndex, 1)[0];
 
-                round.matches?.push({
-                    match_id : [key, player1._no, player2._no].join("-"),
-                    group:key, 
-                    round: round_no, 
-                    player1: player1._no, 
-                    player2 : player2._no
-                });
+                // round.matches?.push({
+                //     match_id : [key, player1._no, player2._no].join("-"),
+                //     group:key, 
+                //     round: round_no, 
+                //     player1: player1._no, 
+                //     player2 : player2._no
+                // });
 
                 player1.opponent_list.push(player2._no);
                 player2.opponent_list.push(player1._no);
             }
             else {
-                round.matches?.push({
-                    match_id : [key, player1._no].join("-") + Sts_Players.PLAYER_FREE_WIN, 
-                    group:key, 
-                    round: round_no, 
-                    player1: player1._no, 
-                    player2 : null
-                });
+                // round.matches?.push({
+                //     match_id : [key, player1._no].join("-") + Sts_Players.PLAYER_FREE_WIN, 
+                //     group:key, 
+                //     round: round_no, 
+                //     player1: player1._no, 
+                //     player2 : null
+                // });
 
                 player1.opponent_list.push(Sts_Players.PLAYER_FREE_WIN_ID);
             }

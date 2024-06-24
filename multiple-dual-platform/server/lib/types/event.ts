@@ -1,5 +1,8 @@
+import { Sts_Event_Status, Sts_Match_Result, Sts_Round_Status } from "@/server/status/event_status"
+
 export type Player = {
     _no : number,
+    id : string,
     player_name : string,
     wins : number,
     points : number,
@@ -10,6 +13,7 @@ export type Player = {
     offical_user_id ?: string,
     round_now : number,
     match_id_now : string | null,
+    decklist ?: any,
 }
 
 export type Match = {
@@ -19,15 +23,19 @@ export type Match = {
     player1 : number,
     player2 : number | null,
     winner ?: number | null,
+    winnerId?: string, // Optional: Only present if there is a winner
+    status: Sts_Event_Status,
+    resultDetail?: any,
 
 }
 
 export type Round = {
+    id: string,
+    eventId: string,
     round_no : number,
     start_time ?: Date,
     end_time ?: Date,
-    matches ?: Match[],
-
+    status: Sts_Round_Status,
 }
 
 export type Event = {
@@ -35,15 +43,15 @@ export type Event = {
     event_type: string,
     event_name : string,
     match_mode : string,
-    orgnazier_id : string,
-    orgnazier_name : string,
-    size : number,
+    host_id : string,
+    host_name : string,
+    players_number : number,
     start_time : Date,
     end_time : Date, 
     address : string,
     players : Player[],
     round_now : number,
     rounds : Round[],
-
+    pre_registration_decklist : boolean,
 }
 

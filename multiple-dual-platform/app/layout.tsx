@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from 'react-hot-toast'
 import "./globals.css";
+import { cn } from "@/server/lib/utils/utils";
+import { Providers } from "@/components/providers";
+import { Header } from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,9 +18,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="jp" suppressHydrationWarning>
+      <body
+        className={cn(
+          'font-sans antialiased'
+        )}
+      >
+        <Toaster />
+        <Providers
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex flex-col flex-1 bg-muted/50">{children}</main>
+          </div>
+        </Providers>
+      </body>
     </html>
   );
 }
