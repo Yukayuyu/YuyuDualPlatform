@@ -85,7 +85,7 @@ const Dashboard = () => {
       <ul>
         {events.map(event => (
           <li key={event.id}>
-            <Link href={`/events/${event.id}`}>
+            <Link href={`/event//${event.id}`}>
               {event.name} - {new Date(event.date.seconds * 1000).toLocaleDateString()}
             </Link>
           </li>

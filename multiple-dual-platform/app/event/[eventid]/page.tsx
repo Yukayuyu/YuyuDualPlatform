@@ -140,7 +140,7 @@ const EventDetail = () => {
           <ul className={styles.list}>
             {rounds.map((round) => (
               <li key={round.id}>
-                <a className={styles.link} href={`/events/${eventId}/round/${round.id}`}>{round.name}</a>
+                <a className={styles.link} href={`/event/${eventId}/round/${round.id}`}>{round.name}</a>
               </li>
             ))}
           </ul>
