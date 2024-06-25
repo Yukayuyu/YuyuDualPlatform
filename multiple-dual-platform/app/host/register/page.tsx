@@ -2,24 +2,30 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import toast from 'react-hot-toast';
-import styles from './Login.module.css'; // CSSモジュールをインポート
+import styles from './Register.module.css'; // CSSモジュールをインポート
 import { auth } from '@/server/auth/firebase';
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.success('Login successful');
+      await createUserWithEmailAndPassword(auth, email, password);
+      toast.success('Registration successful');
       router.push('/host/dashboard');
     } catch (error: any) {
       toast.error(error?.message);
@@ -28,8 +34,8 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Login</h1>
-      <form onSubmit={handleLogin} className={styles.form}>
+      <h1 className={styles.title}>Register</h1>
+      <form onSubmit={handleRegister} className={styles.form}>
         <Input
           type="email"
           value={email}
@@ -46,14 +52,18 @@ const Login = () => {
           required
           className={styles.input}
         />
-        <Button type="submit" className={styles.button}>Login</Button>
+        <Input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
+          required
+          className={styles.input}
+        />
+        <Button type="submit" className={styles.button}>Register</Button>
       </form>
-      <div className={styles.links}>
-        <a href="/host/register" className={styles.link}>Register</a>
-        <a href="/host/reset-password" className={styles.link}>Forgot Password?</a>
-      </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

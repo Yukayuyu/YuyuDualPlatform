@@ -52,12 +52,8 @@ const RoundDetail = () => {
       <ul className={styles.list}>
         {matches.map((match) => (
           <li key={match.id} className={styles.listItem}>
-            <span>{match.player1.player_name} vs {match.player2 ? match.player2.player_name : 'Bye'} - {match.status}</span>
-            <Input
-              type="text"
-              placeholder="Result"
-              onBlur={(e) => updateMatch(match.id, e.target.value)}
-            />
+            <span>{match.player1} vs {match.player2 ? match.player2 : 'Bye'} - {match.status}</span>
+            <a className={styles.link} href={`/host/event/${eventId}/round/${roundId}/match/${match.id}`}>View Details</a>
           </li>
         ))}
       </ul>

@@ -1,12 +1,9 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, db } from '@/server/auth/firebase';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import toast from 'react-hot-toast';
-import Link from 'next/link';
-import { Sts_Event_Status } from '@/server/status/event_status';
 
 const Dashboard = () => {
   const [eventName, setEventName] = useState<string>('');
@@ -17,7 +14,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!user) {
-      router.push('/organizer/login'); // 未認証の場合はログインページにリダイレクト
+      router.push('/admin/login'); // 未認証の場合はログインページにリダイレクト
     } else {
       fetchEvents(); // ユーザーが認証された後にイベントを取得
     }
@@ -46,15 +43,14 @@ const Dashboard = () => {
           date: new Date(eventDate),
           hostId: user.uid,
           participants: [],
-          status: Sts_Event_Status.NOT_STARTED,
+          status: 'Not Started',
         });
         setEventName('');
         setEventDate('');
-        toast.success('Event created successfully');
+        alert('Event created successfully');
         fetchEvents(); // 新しいイベント作成後にイベントを再取得
       } catch (e) {
         console.error('Error adding document: ', e);
-        toast.error('Failed to create event');
       }
     }
   };
@@ -85,9 +81,7 @@ const Dashboard = () => {
       <ul>
         {events.map(event => (
           <li key={event.id}>
-            <Link href={`/event//${event.id}`}>
-              {event.name} - {new Date(event.date.seconds * 1000).toLocaleDateString()}
-            </Link>
+            {event.name} - {new Date(event.date.seconds * 1000).toLocaleDateString()}
           </li>
         ))}
       </ul>

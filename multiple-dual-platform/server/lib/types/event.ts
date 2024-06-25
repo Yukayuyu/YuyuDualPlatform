@@ -40,12 +40,13 @@ export type Round = {
 
 export type Event = {
     id : number,
+    name : string,
     event_type: string,
-    event_name : string,
     match_mode : string,
     host_id : string,
     host_name : string,
     players_number : number,
+    date: Date,
     start_time : Date,
     end_time : Date, 
     address : string,
@@ -53,5 +54,6 @@ export type Event = {
     round_now : number,
     rounds : Round[],
     pre_registration_decklist : boolean,
+    status: Sts_Event_Status;
 }
 

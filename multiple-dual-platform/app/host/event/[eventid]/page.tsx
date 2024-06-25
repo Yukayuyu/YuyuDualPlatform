@@ -14,11 +14,14 @@ import { Input } from '@/components/input';
 import { Button } from '@/components/button';
 import toast from 'react-hot-toast';
 import { Player } from '@/server/lib/types/event';
+import { Sts_Event_Status } from '@/server/status/event_status';
+import PlayerList from '@/components/palyer-list';
 
 const EventDetail = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const eventId = pathname.split('/').pop();
+  const pathSegments = pathname.split('/');
+  const eventId = pathSegments[pathSegments.indexOf('event') + 1];
   const [event, setEvent] = useState<any>(null);
   const [rounds, setRounds] = useState<any[]>([]);
   const [roundName, setRoundName] = useState<string>('');
@@ -44,6 +47,22 @@ const EventDetail = () => {
   const fetchRounds = async () => {
     const fetchedRounds = await getRoundsByEventId(eventId!);
     setRounds(fetchedRounds);
+  };
+
+  const startPlayerRegistration = async () => {
+    if (eventId) {
+      await updateEventStatus(eventId, Sts_Event_Status.PLAYER_REGISTRATION);
+      toast.success('Player registration started');
+      fetchEvent();
+    }
+  };
+
+  const startEvent = async () => {
+    if (eventId) {
+      await updateEventStatus(eventId, Sts_Event_Status.IN_PROGRESS);
+      toast.success('Event started');
+      fetchEvent();
+    }
   };
 
   const addPlayer = async () => {
@@ -83,10 +102,28 @@ const EventDetail = () => {
     <div className={styles.container}>
       <h1 className={styles.title}>Event Details</h1>
       <p><strong>Name:</strong> {event.name}</p>
-      <p><strong>Date:</strong> {new Date(event.date.seconds * 1000).toLocaleDateString()}</p>
+      <p><strong>Date:</strong> {new Date(event.date).toLocaleDateString()}</p>
       <p><strong>Status:</strong> {event.status}</p>
-
-      {event.status === 'In Progress' && (
+      {event.status === Sts_Event_Status.NOT_STARTED && (
+        <Button onClick={startPlayerRegistration}>Start Player Registration</Button>
+      )}
+      {event.status === Sts_Event_Status.PLAYER_REGISTRATION && (
+        <div>
+          <h2>Player Registration</h2>
+          <Input
+            type="text"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            placeholder="Player Name"
+            required
+          />
+          <Button onClick={addPlayer}>Add Player</Button>
+          <h2>Players</h2>
+          <PlayerList players={players} />
+          <Button onClick={startEvent}>Start Event</Button>
+        </div>
+      )}
+      {event.status === Sts_Event_Status.IN_PROGRESS && (
         <div>
           <h2>Create Round</h2>
           <Input

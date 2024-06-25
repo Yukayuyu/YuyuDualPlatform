@@ -1,5 +1,7 @@
 import { db } from '@/server/auth/firebase';
 import { collection, doc, getDoc, getDocs, updateDoc, addDoc } from 'firebase/firestore';
+import { Player } from '../types/event';
+
 
 export const getEventById = async (eventId: string) => {
   const docRef = doc(db, 'events', eventId);
@@ -18,34 +20,49 @@ export const updateEventStatus = async (eventId: string, status: string) => {
   await updateDoc(docRef, { status });
 };
 
-export const addPlayerToEvent = async (eventId: string, player: any) => {
+export const addPlayerToEvent = async (eventId: string, player: Player) => {
   const docRef = doc(db, 'events', eventId);
   const eventSnap = await getDoc(docRef);
   if (eventSnap.exists()) {
     const eventData = eventSnap.data();
-    const updatedParticipants = [...(eventData.participants || []), player];
-    await updateDoc(docRef, { participants: updatedParticipants });
+    const updatedPlayers = [...(eventData.players || []), player];
+    await updateDoc(docRef, { players: updatedPlayers });
   }
 };
 
-export const createRound = async (eventId: string, roundName: string, participants: any[]) => {
+export const updatePlayerInEvent = async (eventId: string, player: Player) => {
+  const docRef = doc(db, 'events', eventId);
+  const eventSnap = await getDoc(docRef);
+  if (eventSnap.exists()) {
+    const eventData = eventSnap.data();
+    const updatedPlayers = eventData.players.map((p: Player) => p.id === player.id ? player : p);
+    await updateDoc(docRef, { players: updatedPlayers });
+  }
+};
+
+export const createRound = async (eventId: string, roundName: string, players: Player[]) => {
   const roundsRef = collection(db, 'events', eventId, 'rounds');
-  const roundDoc = await addDoc(roundsRef, { name: roundName });
+  const roundDoc = await addDoc(roundsRef, { name: roundName, players: players, results: [] });
+
+  // マッチの自動生成
   const matchesRef = collection(db, 'events', eventId, 'rounds', roundDoc.id, 'matches');
-  for (let i = 0; i < participants.length; i += 2) {
-    if (participants[i + 1]) {
+  for (let i = 0; i < players.length; i += 2) {
+    if (players[i + 1]) {
       await addDoc(matchesRef, {
-        player1: participants[i],
-        player2: participants[i + 1],
+        round: 1,
+        player1: players[i]._no,
+        player2: players[i + 1]._no,
         status: 'Not Started',
       });
     } else {
       await addDoc(matchesRef, {
-        player1: participants[i],
+        round: 1,
+        player1: players[i]._no,
         player2: null,
         status: 'Not Started',
       });
     }
   }
+
   return roundDoc.id;
 };

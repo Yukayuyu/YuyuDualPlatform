@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import styles from './Players.module.css'; // CSSモジュールをインポート
-import { getEventById } from '@/server/lib/service/eventService'; // サービスをインポート
-import { Button } from '@/components/button';
 import { Player } from '@/server/lib/types/event';
+import styles from './Players.module.css'; // CSSモジュールをインポート
+import { Button } from '@/components/button';
+import { getEventById } from '@/server/lib/service/eventService';
+import PlayerList from '@/components/palyer-list';
 
 const Players = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const eventId = pathname.split('/').pop();
+  const pathSegments = pathname.split('/');
+  const eventId = pathSegments[pathSegments.indexOf('event') + 1];
   const [players, setPlayers] = useState<Player[]>([]);
 
   useEffect(() => {
@@ -33,14 +35,7 @@ const Players = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Players</h1>
-      <ul className={styles.list}>
-        {players.map(player => (
-          <li key={player.id} className={styles.listItem}>
-            <span>{player.player_name}</span>
-            <Button variant="link" onClick={() => viewPlayerDetails(player.id)}>View Details</Button>
-          </li>
-        ))}
-      </ul>
+      <PlayerList players={players} onViewDetails={viewPlayerDetails} editable />
       <Button back>Back</Button>
     </div>
   );
