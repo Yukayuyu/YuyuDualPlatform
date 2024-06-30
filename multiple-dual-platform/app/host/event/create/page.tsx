@@ -7,6 +7,7 @@ import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import styles from './CreateEvent.module.css'; // CSSモジュールをインポート
 import { auth } from '@/server/auth/firebase';
+import { toDateString } from '@/server/lib/utils/date';
 
 const CreateEvent = () => {
   const router = useRouter();
@@ -18,6 +19,8 @@ const CreateEvent = () => {
     host_name: '',
     players_number: 0,
     date: null,
+    start_time: '',
+    end_time: '',
     address: '',
     pre_registration_decklist: false,
     host_id: user?.uid || 'nobody',
@@ -43,7 +46,7 @@ const CreateEvent = () => {
       <h1 className={styles.title}>Create Event</h1>
       <Input
         type="text"
-        name="event_name"
+        name="name"
         value={eventDetails.name}
         onChange={handleChange}
         placeholder="Event Name"
@@ -84,7 +87,21 @@ const CreateEvent = () => {
       <Input
         type="date"
         name="date"
-        value={eventDetails.date || ''}
+        value={toDateString(eventDetails.date)}
+        onChange={handleChange}
+        required
+      />
+            <Input
+        type="time"
+        name="start_time"
+        value={eventDetails.start_time}
+        onChange={handleChange}
+        required
+      />
+      <Input
+        type="time"
+        name="end_time"
+        value={eventDetails.end_time}
         onChange={handleChange}
         required
       />

@@ -17,6 +17,7 @@ import QrCodeModal from '@/components/QrCodeModal'; // QRコードモーダル�
 import toast from 'react-hot-toast';
 import { Sts_Event_Status } from '@/server/status/event_status';
 import { Event, Player } from '@/server/lib/types/event';
+import { toDateString } from '@/server/lib/utils/date';
 
 const EventDetail = () => {
   const router = useRouter();
@@ -66,9 +67,9 @@ const EventDetail = () => {
       <p><strong>Mode:</strong> {event.match_mode}</p>
       <p><strong>Host:</strong> {event.host_name}</p>
       <p><strong>Players:</strong> {event.players_number}</p>
-      <p><strong>Date:</strong> {new Date(event.date || new Date()).toLocaleDateString()}</p>
-      <p><strong>Start Time:</strong> {new Date(event.start_time || new Date()).toLocaleDateString()}</p>
-      <p><strong>End Time:</strong> {new Date(event.end_time || new Date()).toLocaleDateString()}</p>
+      <p><strong>Date:</strong> {toDateString(event.date)}</p>
+      <p><strong>Start Time:</strong> {event.start_time}</p>
+      <p><strong>End Time:</strong> {event.end_time}</p>
       <p><strong>Address:</strong> {event.address}</p>
       <p><strong>Pre-registration Decklist:</strong> {event.pre_registration_decklist ? 'Yes' : 'No'}</p>
       <p><strong>Status:</strong> {event.status}</p>

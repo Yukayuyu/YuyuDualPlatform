@@ -1,5 +1,5 @@
 import { db } from '@/server/auth/firebase';
-import { collection, doc, getDoc, getDocs, updateDoc, addDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc, addDoc, Timestamp } from 'firebase/firestore';
 import { Player, Event, Round } from '../types/event';
 import { Sts_Event_Status, Sts_Round_Status } from '@/server/status/event_status';
 
@@ -10,8 +10,6 @@ export const getEvents = async (): Promise<Event[]> => {
     id: doc.id,
     ...doc.data(),
     date: doc.data().date.toDate(),
-    start_time: doc.data().start_time?.toDate(),
-    end_time: doc.data().end_time?.toDate(),
   } as Event));
 };
 
@@ -57,7 +55,7 @@ export const createRound = async (eventId: string, roundName: string, players: P
   const roundsRef = collection(db, 'events', eventId, 'rounds');
   const roundDoc = await addDoc(roundsRef, { name: roundName, players: players, results: [] });
 
-  // マッチの自動生成
+  // TODO:マッチの自動生成
   const matchesRef = collection(db, 'events', eventId, 'rounds', roundDoc.id, 'matches');
   for (let i = 0; i < players.length; i += 2) {
     if (players[i + 1]) {
@@ -84,6 +82,7 @@ export const addEvent = async (eventDetails: Omit<Event, 'id' | 'rounds' | 'stat
   const eventsRef = collection(db, 'events');
   await addDoc(eventsRef, {
     ...eventDetails,
+    date:  eventDetails.date ? Timestamp.fromDate(new Date(eventDetails.date)) : null,
     status: Sts_Event_Status.NOT_STARTED,
     rounds: [],
   });
