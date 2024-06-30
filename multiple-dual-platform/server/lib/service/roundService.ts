@@ -2,7 +2,6 @@ import { db } from '@/server/auth/firebase';
 import { collection, doc, getDoc, getDocs, addDoc, updateDoc } from 'firebase/firestore';
 import { Match } from '../types/event';
 
-
 export const getRoundById = async (eventId: string, roundId: string) => {
   const docRef = doc(db, 'events', eventId, 'rounds', roundId);
   const docSnap = await getDoc(docRef);

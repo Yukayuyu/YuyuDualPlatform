@@ -5,8 +5,8 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import styles from './ResetPassword.module.css'; // CSSモジュールをインポート
 import { auth } from '@/server/auth/firebase';
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
+import { Input } from '@/components/Input';
+import { Button } from '@/components/Button';
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('');

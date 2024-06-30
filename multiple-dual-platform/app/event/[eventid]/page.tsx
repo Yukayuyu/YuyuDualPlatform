@@ -10,8 +10,8 @@ import {
   addPlayerToEvent,
   createRound,
 } from '@/server/lib/service/eventService'; // サービスをインポート
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
+import { Input } from '@/components/Input';
+import { Button } from '@/components/Button';
 import toast from 'react-hot-toast';
 import { Player } from '@/server/lib/types/event';
 

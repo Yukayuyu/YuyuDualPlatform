@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './PlayerDetails.module.css'; // CSSモジュールをインポート
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
+import { Input } from '@/components/Input';
+import { Button } from '@/components/Button';
 import toast from 'react-hot-toast';
 import { Player } from '@/server/lib/types/event';
 import { getEventById, updatePlayerInEvent } from '@/server/lib/service/eventService';

@@ -7,8 +7,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import styles from './Register.module.css'; // CSSモジュールをインポート
 import { auth } from '@/server/auth/firebase';
-import { Button } from '@/components/button';
-import { Input } from '@/components/input';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 
 const Register = () => {
   const router = useRouter();

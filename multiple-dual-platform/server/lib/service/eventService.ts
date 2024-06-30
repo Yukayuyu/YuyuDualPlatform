@@ -1,18 +1,31 @@
 import { db } from '@/server/auth/firebase';
 import { collection, doc, getDoc, getDocs, updateDoc, addDoc } from 'firebase/firestore';
-import { Player } from '../types/event';
+import { Player, Event, Round } from '../types/event';
+import { Sts_Event_Status, Sts_Round_Status } from '@/server/status/event_status';
+
+export const getEvents = async (): Promise<Event[]> => {
+  const eventsRef = collection(db, 'events');
+  const eventsSnap = await getDocs(eventsRef);
+  return eventsSnap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+    date: doc.data().date.toDate(),
+    start_time: doc.data().start_time?.toDate(),
+    end_time: doc.data().end_time?.toDate(),
+  } as Event));
+};
 
 
-export const getEventById = async (eventId: string) => {
+export const getEventById = async (eventId: string): Promise<Event | null> => {
   const docRef = doc(db, 'events', eventId);
   const docSnap = await getDoc(docRef);
-  return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
+  return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } as Event : null;
 };
 
 export const getRoundsByEventId = async (eventId: string) => {
   const roundsRef = collection(db, 'events', eventId, 'rounds');
   const roundsSnap = await getDocs(roundsRef);
-  return roundsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return roundsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Round));
 };
 
 export const updateEventStatus = async (eventId: string, status: string) => {
@@ -52,17 +65,31 @@ export const createRound = async (eventId: string, roundName: string, players: P
         round: 1,
         player1: players[i]._no,
         player2: players[i + 1]._no,
-        status: 'Not Started',
+        status: Sts_Round_Status.NOT_STARTED,
       });
     } else {
       await addDoc(matchesRef, {
         round: 1,
         player1: players[i]._no,
         player2: null,
-        status: 'Not Started',
+        status: Sts_Round_Status.NOT_STARTED,
       });
     }
   }
 
   return roundDoc.id;
+};
+
+export const addEvent = async (eventDetails: Omit<Event, 'id' | 'rounds' | 'status'>) => {
+  const eventsRef = collection(db, 'events');
+  await addDoc(eventsRef, {
+    ...eventDetails,
+    status: Sts_Event_Status.NOT_STARTED,
+    rounds: [],
+  });
+};
+
+export const updateEventDetails = async (eventId: string, eventDetails: Event) => {
+  const docRef = doc(db, 'events', eventId);
+  await updateDoc(docRef, eventDetails);
 };

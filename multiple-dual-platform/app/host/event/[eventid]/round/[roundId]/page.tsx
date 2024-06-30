@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './RoundDetail.module.css'; // CSSモジュールをインポート
 import { getRoundById, getMatchesByRoundId, updateMatchResult } from '@/server/lib/service/roundService'; // サービスをインポート
-import { Button } from '@/components/button';
-import { Input } from '@/components/input';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 import toast from 'react-hot-toast';
 
 const RoundDetail = () => {

@@ -3,7 +3,7 @@
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/server/auth/firebase';
-import { Button } from '@/components/button'; // Button コンポーネントをインポート
+import { Button } from '@/components/Button';
 import { useEffect, useState } from 'react';
 
 export function Header() {

@@ -1,100 +1,44 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth, db } from '@/server/auth/firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import toast from 'react-hot-toast';
-import Link from 'next/link';
-
+import { getEvents } from '@/server/lib/service/eventService'; // サービスをインポート
+import { Event } from '@/server/lib/types/event'; // 型をインポート
 import styles from './Dashboard.module.css'; // CSSモジュールをインポート
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
+import { Button } from '@/components/Button';
+import CollapsibleEventList from '@/components/CollapsibleEventList'; // 共通コンポーネントをインポート
 import { Sts_Event_Status } from '@/server/status/event_status';
 
 const Dashboard = () => {
-  const [eventName, setEventName] = useState<string>('');
-  const [eventDate, setEventDate] = useState<string>('');
-  const [events, setEvents] = useState<any[]>([]); // イベントリスト用のステート
   const router = useRouter();
-  const user = auth.currentUser;
+  const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    if (!user) {
-      router.push('/host/login'); // 未認証の場合はログインページにリダイレクト
-    } else {
-      fetchEvents(); // ユーザーが認証された後にイベントを取得
-    }
-  }, [user, router]);
+    fetchEvents();
+  }, []);
 
-  // イベントをFirestoreから取得する関数
   const fetchEvents = async () => {
-    if (user) {
-      const q = query(collection(db, 'events'), where('hostId', '==', user.uid));
-      const querySnapshot = await getDocs(q);
-      const fetchedEvents: any[] = [];
-      querySnapshot.forEach((doc) => {
-        fetchedEvents.push({ id: doc.id, ...doc.data() });
-      });
-      setEvents(fetchedEvents);
-    }
+    const eventData = await getEvents();
+    setEvents(eventData);
   };
 
-  // 新しいイベントを作成する関数
-  const createEvent = async (e: FormEvent) => {
-    e.preventDefault();
-    if (user) {
-      try {
-        await addDoc(collection(db, 'events'), {
-          name: eventName,
-          date: new Date(eventDate),
-          hostId: user.uid,
-          participants: [],
-          status: Sts_Event_Status.NOT_STARTED,
-        });
-        setEventName('');
-        setEventDate('');
-        toast.success('Event created successfully');
-        fetchEvents(); // 新しいイベント作成後にイベントを再取得
-      } catch (e) {
-        console.error('Error adding document: ', e);
-        toast.error('Failed to create event');
-      }
-    }
+  const handleCreateEvent = () => {
+    router.push('/host/event/create');
   };
 
-  if (!user) return null;
+  const filterEventsByStatus = (status: Sts_Event_Status) => {
+    return events.filter((event) => event.status === status);
+  };
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Host Dashboard</h1>
-      <form onSubmit={createEvent} className={styles.form}>
-        <Input
-          type="text"
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
-          placeholder="Event Name"
-          required
-        />
-        <Input
-          type="date"
-          value={eventDate}
-          onChange={(e) => setEventDate(e.target.value)}
-          placeholder="Event Date"
-          required
-        />
-        <Button type="submit">Create Event</Button>
-      </form>
-      <h2 className={styles.subtitle}>Your Events</h2>
-      <ul className={styles.list}>
-        {events.map(event => (
-          <li key={event.id} className={styles.listItem}>
-            <Link href={`/host/event/${event.id}`}>
-              {event.name} - {new Date(event.date.seconds * 1000).toLocaleDateString()}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <h1 className={styles.title}>Dashboard</h1>
+      <Button onClick={handleCreateEvent}>Create Event</Button>
+      <CollapsibleEventList title="Not Started" events={filterEventsByStatus(Sts_Event_Status.NOT_STARTED)} />
+      <CollapsibleEventList title="Player Registration" events={filterEventsByStatus(Sts_Event_Status.PLAYER_REGISTRATION)} />
+      <CollapsibleEventList title="In Progress" events={filterEventsByStatus(Sts_Event_Status.IN_PROGRESS)} />
+      <CollapsibleEventList title="Completed" events={filterEventsByStatus(Sts_Event_Status.COMPLETED)} />
+      <CollapsibleEventList title="Canceled" events={filterEventsByStatus(Sts_Event_Status.CANCELED)} />
     </div>
   );
 };

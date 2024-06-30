@@ -2,8 +2,8 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useOrganizerStore} from './states'
 import { Combobox } from '@headlessui/react';
-import { Button } from '@/components/button';
-import { Input } from '@/components/input';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 
 
 export default function Home() {

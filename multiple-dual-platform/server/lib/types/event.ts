@@ -39,16 +39,16 @@ export type Round = {
 }
 
 export type Event = {
-    id : number,
+    id : string,
     name : string,
     event_type: string,
     match_mode : string,
     host_id : string,
     host_name : string,
     players_number : number,
-    date: Date,
-    start_time : Date,
-    end_time : Date, 
+    date: Date | null,
+    start_time ?: Date | null,
+    end_time ?: Date | null, 
     address : string,
     players : Player[],
     round_now : number,

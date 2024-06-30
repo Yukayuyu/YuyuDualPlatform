@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Player } from '@/server/lib/types/event';
 import styles from './Players.module.css'; // CSSモジュールをインポート
-import { Button } from '@/components/button';
+import { Button } from '@/components/Button';
 import { getEventById } from '@/server/lib/service/eventService';
-import PlayerList from '@/components/palyer-list';
+import PlayerList from '@/components/PlayerList';
 
 const Players = () => {
   const router = useRouter();

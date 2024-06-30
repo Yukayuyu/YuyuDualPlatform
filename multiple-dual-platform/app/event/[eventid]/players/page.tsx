@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from './Players.module.css'; // CSSモジュールをインポート
 import { getEventById } from '@/server/lib/service/eventService'; // サービスをインポート
-import { Button } from '@/components/button';
+import { Button } from '@/components/Button';
 import { Player } from '@/server/lib/types/event';
 
 const Players = () => {

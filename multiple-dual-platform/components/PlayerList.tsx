@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import { Button } from '@/components/button';
-import styles from './player-list.module.css';
+import { Button } from '@/components/Button';
+import styles from './PlayerList.module.css';
 import { Player } from '@/server/lib/types/event';
 
 interface PlayerListProps {

@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import { Toaster } from 'react-hot-toast'
 import "./globals.css";
 import { cn } from "@/server/lib/utils/utils";
-import { Providers } from "@/components/providers";
-import { Header } from "@/components/header";
+import { Providers } from "@/components/Providers";
+import { Header } from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
