@@ -39,7 +39,8 @@ const EditEvent = () => {
   const handleSubmit = async () => {
     if (eventDetails) {
       await updateEventDetails(eventId, eventDetails);
-      router.push(`/host/event/${eventId}`);
+      //router.push(`/host/event/${eventId}`);
+      router.back();
     }
   };
 
