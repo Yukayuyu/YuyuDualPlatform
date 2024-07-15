@@ -5,7 +5,7 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { ThemeProviderProps } from 'next-themes/dist/types'
 
 import { TooltipProvider } from '@/components/Tooltip'
-import { SidebarProvider } from '@/server/lib/hooks/use-sidebar'
+import { SidebarProvider } from '@/hooks/use-sidebar'
 
 export function Providers({ children, ...props }: ThemeProviderProps)
 {

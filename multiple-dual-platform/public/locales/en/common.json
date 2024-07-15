@@ -1,0 +1,8 @@
+{
+    "status_not_started": "Not Started",
+    "status_player_registration": "Player Registration",
+    "status_in_progress": "In Progress",
+    "status_completed": "Completed",
+    "status_canceled": "Canceled",
+    "event_create_event": "Create_Event"
+}

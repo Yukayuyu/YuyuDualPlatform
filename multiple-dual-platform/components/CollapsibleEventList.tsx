@@ -13,6 +13,11 @@ const CollapsibleEventList: React.FC<CollapsibleEventListProps> = ({ title, even
     setIsOpen(!isOpen);
   };
 
+  const clickLink = (event: React.MouseEvent<HTMLLIElement>) =>{
+    const anchor = event.currentTarget.querySelector('a');
+    !!anchor ? anchor.click() : null
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header} onClick={toggleOpen}>
@@ -22,7 +27,7 @@ const CollapsibleEventList: React.FC<CollapsibleEventListProps> = ({ title, even
       {isOpen && (
         <ul className={styles.eventList}>
           {events.map((event) => (
-            <li key={event.id} className={styles.eventItem}>
+            <li key={event.id} className={styles.eventItem} onClick={clickLink}>
               <a href={`/host/event/${event.id}`}>{event.name}</a>
             </li>
           ))}

@@ -1,0 +1,8 @@
+{
+    "status_not_started": "未開始",
+    "status_player_registration": "プレイヤー登録中",
+    "status_in_progress": "進行中",
+    "status_completed": "完了",
+    "status_canceled": "キャンセル済み",
+    "event_create_event": "イベント作成"
+}
